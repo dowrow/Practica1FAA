@@ -16,14 +16,21 @@ import particionado.Particion;
 
 public class Datos {
 
-    public enum TiposDeAtributos {
-        Continuo, Nominal
-    };
 
-    ArrayList<TiposDeAtributos> tipoAtributos;
-    ArrayList<String> nombreCampos;
-    Elemento datos[][];
+    /* Lista de atributos del fichero */
+    private ArrayList<TiposDeAtributos> tipoAtributos;
     
+    /* Lista de nombres de los campos del fichero */
+    private ArrayList<String> nombreCampos;
+    
+    /* Datos del fichero */
+    private Elemento datos[][];
+    
+    /*
+     * Constructor
+     * @param numDatos Número de filas que contiene el fichero
+     * @param tipos Tipos de columnas que contiene el fichero
+     */
     public Datos(int numDatos, ArrayList<TiposDeAtributos> tipos) {
         this.tipoAtributos = tipos;
     }
@@ -39,35 +46,95 @@ public class Datos {
     // 3 Filas: nº datos, nombres de campos, tipos de atributos [Nominal o Continuo]
     // Resto de filas: Conjunto de datos, uno por fila y campos separados por comas
     public static Datos cargaDeFichero(String nombreDeFichero) {
+        
         CsvReader ficheroCSV;
-        ArrayList<String> nombreAtributos;
+        ArrayList<String> nombreCampos;
+        ArrayList<String> tiposString;
+        ArrayList<TiposDeAtributos> tipos = new ArrayList<>();
+        ArrayList<String> elementosString;
         
         try {
-            ficheroCSV = new CsvReader(nombreDeFichero);
-            
+             ficheroCSV = new CsvReader(nombreDeFichero);
+
             // Lee nº datos
             ficheroCSV.readRecord();
             int numFilas = Integer.parseInt(ficheroCSV.get(0));
-                        
+
             // Lee nombres campos
             ficheroCSV.readRecord();
-            nombreAtributos = Arrays.asList(ficheroCSV.getValues());
-                    
-            // Lee tipos de atributos
-            while (ficheroCSV.readRecord()) {
-               
+            nombreCampos = new ArrayList<>(Arrays.asList(ficheroCSV.getValues()));
+
+            // Lee tipos de atributos como cadenas
+            ficheroCSV.readRecord();
+            tiposString = new ArrayList<>(Arrays.asList(ficheroCSV.getValues()));
+
+            // Pasa cadenas a elementos de la enumeración
+            for (String cadena: tiposString) {
+                tipos.add(TiposDeAtributos.valueOf(cadena));
             }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Datos.class.getName()).log(Level.SEVERE, null, ex);
+
+            // Crea objeto a devolver
+            Datos objetoDatos = new Datos(numFilas, tipos);
+            objetoDatos.setNombreCampos(nombreCampos);
+            
+            // Introducimos filas
+            while (ficheroCSV.readRecord()) {
+                
+                // Leemos todos los elementos de una fila como cadenas
+                elementosString = new ArrayList<>(Arrays.asList(ficheroCSV.getValues()));
+                
+                // Para cada cadena leída creamos un Elemento 
+                // y lo introducimos en la matriz
+
+                // ElementoFactory.crear(tipo, cadena)
+
+            }
+
+            return objetoDatos;
+            
+        } catch (Exception e) {
+            return null;
         }
-        
-      
-        
-       
-         
-        usuarios_import.close();
-        return null;
     }
+    
+    /*
+     * GETTERS & SETTERS
+     */
+    
+    
+    /**
+     * @return the tipoAtributos
+     */
+    public ArrayList<TiposDeAtributos> getTipoAtributos() {
+        return tipoAtributos;
+    }
+
+    /**
+     * @param tipoAtributos the tipoAtributos to set
+     */
+    public void setTipoAtributos(ArrayList<TiposDeAtributos> tipoAtributos) {
+        this.tipoAtributos = tipoAtributos;
+    }
+
+    /**
+     * @return the nombreCampos
+     */
+    public ArrayList<String> getNombreCampos() {
+        return nombreCampos;
+    }
+
+    /**
+     * @param nombreCampos the nombreCampos to set
+     */
+    public void setNombreCampos(ArrayList<String> nombreCampos) {
+        this.nombreCampos = nombreCampos;
+    }
+
+    /**
+     * @return the datos
+     */
+    public Elemento[][] getDatos() {
+        return datos;
+    }
+    
 }
