@@ -26,6 +26,8 @@ public class Datos {
     /* Datos del fichero */
     private Elemento datos[][];
     
+    int nDatosCopiados = 0;
+    
     /*
      * Constructor
      * @param numDatos Número de filas que contiene el fichero
@@ -33,6 +35,8 @@ public class Datos {
      */
     public Datos(int numDatos, ArrayList<TiposDeAtributos> tipos) {
         this.tipoAtributos = tipos;
+        this.datos = new Elemento[numDatos][tipos.size()];
+        
     }
 
     public Datos extraeDatosTrain(Particion idx) {
@@ -85,6 +89,17 @@ public class Datos {
                 
                 // Para cada cadena leída creamos un Elemento 
                 // y lo introducimos en la matriz
+                int i=0;
+                Elemento elemCopy[] = new Elemento[objetoDatos.getTamColumn()];
+                for(String elementoString: elementosString){
+                    TiposDeAtributos tipo = objetoDatos.getTipoAtributosAt(i);
+                    Elemento elemento = ElementoFactory.crear(tipo, elementoString);
+                     elemCopy[i] = elemento;
+                    i++;
+                }
+                objetoDatos.addLineaDatos(elemCopy);
+                //System.out.println(elemCopy);
+
 
                 // ElementoFactory.crear(tipo, cadena)
 
@@ -106,7 +121,13 @@ public class Datos {
      * @return the tipoAtributos
      */
     public ArrayList<TiposDeAtributos> getTipoAtributos() {
-        return tipoAtributos;
+        return this.tipoAtributos;
+    }
+     /**
+     * @return TiposDeAtributos en la posicion pasada por parametros
+     */
+    public TiposDeAtributos getTipoAtributosAt(int position){
+        return this.tipoAtributos.get(position);
     }
 
     /**
@@ -122,12 +143,23 @@ public class Datos {
     public ArrayList<String> getNombreCampos() {
         return nombreCampos;
     }
-
+    
+    public int getTamColumn(){
+        return this.nombreCampos.size();
+    }
     /**
      * @param nombreCampos the nombreCampos to set
      */
     public void setNombreCampos(ArrayList<String> nombreCampos) {
         this.nombreCampos = nombreCampos;
+    }
+    
+    public void addLineaDatos(Elemento elem[]){
+        int nDatos = this.nDatosCopiados;
+        for(int i = 0; i <elem.length; i++ ){
+            this.datos[nDatos][i] = elem[i];
+        }
+        this.nDatosCopiados++;
     }
 
     /**

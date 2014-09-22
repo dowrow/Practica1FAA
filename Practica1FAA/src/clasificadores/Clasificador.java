@@ -32,7 +32,15 @@ abstract public class Clasificador {
     }
 
     public static void main(String[] args) {
-        Datos d = Datos.cargaDeFichero(args[0]);
+        Datos d;
+        if(args.length < 1){
+            /*debug*/
+            d = Datos.cargaDeFichero("./src/car.data");
+        }else{
+            d = Datos.cargaDeFichero(args[0]);
+        }
+        
+        
         EstrategiaParticionado part = new ValidacionCruzada();
         Clasificador c = new ClasificadorAPriori();
         ArrayList<Double> errores = Clasificador.validacion(part, d, c);
