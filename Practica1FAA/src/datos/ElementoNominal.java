@@ -13,5 +13,11 @@ public class ElementoNominal extends Elemento {
     public ElementoNominal (String valor) {
         this.valor = valor;
     }
-
+    
+    public String getValorNominal() {
+        return this.valor;
+    }
+    public double getValorContinuo() {
+        return 0.0;
+    }
 }
