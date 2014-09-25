@@ -13,4 +13,10 @@ public class ElementoContinuo extends Elemento {
     public ElementoContinuo (double valor) {
        this.valor = valor; 
     }
+    public String getValorNominal() {
+        return "";
+    }
+    public double getValorContinuo() {
+        return this.valor;
+    }
 } 
