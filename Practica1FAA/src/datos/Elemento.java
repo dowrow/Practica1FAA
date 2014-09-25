@@ -9,4 +9,6 @@ package datos;
  * @author Diego
  */
 public  abstract class Elemento {
+  public abstract String getValorNominal();
+  public abstract double getValorContinuo();
 }
