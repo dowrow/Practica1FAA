@@ -20,4 +20,9 @@ public class ElementoNominal extends Elemento {
     public double getValorContinuo() {
         return 0.0;
     }
+
+    @Override
+    public int hashCode() {
+        return this.valor.hashCode();
+    }
 }

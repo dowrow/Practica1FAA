@@ -19,4 +19,11 @@ public class ElementoContinuo extends Elemento {
     public double getValorContinuo() {
         return this.valor;
     }
+
+    @Override
+    public int hashCode() {
+        return (new Double(valor)).hashCode();
+    }
+
+    
 } 
