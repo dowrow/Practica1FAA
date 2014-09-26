@@ -9,9 +9,11 @@ import java.util.ArrayList;
 
 public class Particion {
 
-    private ArrayList<Integer> indicesTrain;
-    private ArrayList<Integer> indicesTest;
+    private final ArrayList<Integer> indicesTrain;
+    private final ArrayList<Integer> indicesTest;
 
     public Particion(ArrayList<Integer> indTrain, ArrayList<Integer> indTest) {
+        this.indicesTrain = indTrain;
+        this.indicesTest = indTest;
     }
 }
