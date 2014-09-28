@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ClasificadorAPriori extends Clasificador {
-    String Elemento;
+    Elemento maxAPriori;
   
     @Override
     public void entrenamiento(Datos datostrain) {
@@ -28,12 +28,23 @@ public class ClasificadorAPriori extends Clasificador {
             }
             incidencia.put(ultimoElemFila, nIncidencias);
         }
+        Elemento masIncidencias = null;
+        int nIncidencias = 0;
+        for(Elemento e : incidencia.keySet()){
+            int inci = incidencia.get(e);
+            if(inci > nIncidencias){
+                masIncidencias = e;
+                nIncidencias = inci;
+            }
+        }
         
+        this.maxAPriori = masIncidencias;
     }
 
     @Override
     public ArrayList<Integer> clasifica(Datos datos) {
         // Asigno la clase mayoritaria a todos los datos
+        // ArrayList de Integer?
         return null;
     }
 }
