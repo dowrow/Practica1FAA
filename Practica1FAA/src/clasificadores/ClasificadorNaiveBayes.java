@@ -7,6 +7,7 @@ package clasificadores;
 
 import datos.Datos;
 import datos.Elemento;
+import datos.ElementoFactory;
 import datos.TiposDeAtributos;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,9 +87,10 @@ public class ClasificadorNaiveBayes extends Clasificador{
         
         for(Elemento fila[] : datosTest.getDatos()){
             Elemento mejorClase = null;
-            Elemento ultimoElemFila = fila[fila.length-1];
+            //Elemento ultimoElemFila = fila[fila.length-1];
             double mejorProb = 0;
             for(String clase : datosTest.getClases()){
+                Elemento ultimoElemFila = ElementoFactory.crear(TiposDeAtributos.Continuo, clase);
                 double prob = 0;
                 for(int i = 0; i < (fila.length - 1); i++){
                     /*
