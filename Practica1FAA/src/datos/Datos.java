@@ -35,7 +35,7 @@ public class Datos {
     public Datos(int numDatos, ArrayList<TiposDeAtributos> tipos) {
         this.tipoAtributos = tipos;
         this.datos = new Elemento[numDatos][tipos.size()];
-        
+        this.clases = new ArrayList<>();
     }
 
     public Datos extraeDatosTrain(Particion idx) {
@@ -57,7 +57,7 @@ public class Datos {
         ArrayList<String> elementosString;
         
         try {
-             ficheroCSV = new CsvReader(nombreDeFichero);
+            ficheroCSV = new CsvReader(nombreDeFichero);
 
             // Lee nº datos
             ficheroCSV.readRecord();
@@ -100,13 +100,17 @@ public class Datos {
                 
                 // Además, guardamos la clase (última columna)
                 String clase = elemCopy[elemCopy.length - 1].getValorNominal();
-                if (!objetoDatos.clases.contains(clase))
-                    objetoDatos.getClases().add(clase);
+                ArrayList<String> clasesObjeto = objetoDatos.getClases();
+                if (!clasesObjeto.contains(clase)) {
+                    clasesObjeto.add(clase);
+                    objetoDatos.setClases(clasesObjeto);
+                }
             }
 
             return objetoDatos;
             
         } catch (Exception e) {
+            System.out.println("ERROR: " + e + " " + e.getLocalizedMessage() + " " + e.getMessage() + " " + e.getStackTrace());
             return null;
         }
     }
@@ -173,6 +177,13 @@ public class Datos {
      */
     public ArrayList<String> getClases() {
         return clases;
+    }
+
+    /**
+     * @param clases the clases to set
+     */
+    public void setClases(ArrayList<String> clases) {
+        this.clases = clases;
     }
     
 }
