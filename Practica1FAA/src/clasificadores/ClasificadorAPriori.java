@@ -42,9 +42,15 @@ public class ClasificadorAPriori extends Clasificador {
     }
 
     @Override
-    public ArrayList<Integer> clasifica(Datos datos) {
+    public ArrayList<Elemento> clasifica(Datos datos) {
         // Asigno la clase mayoritaria a todos los datos
         // ArrayList de Integer?
-        return null;
+        ArrayList<Elemento> prediccion = new ArrayList<>();
+        for(Elemento e[] : datos.getDatos()){
+            Elemento epredi = this.maxAPriori;
+            prediccion.add(epredi);
+        }
+        
+        return prediccion;
     }
 }

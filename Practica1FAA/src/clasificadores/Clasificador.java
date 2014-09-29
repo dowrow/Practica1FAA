@@ -11,19 +11,19 @@ abstract public class Clasificador {
     //Métodos abstractos que se implementan en cada clasificador concreto
     abstract public void entrenamiento(Datos datosTrain);
 
-    abstract public ArrayList<Integer> clasifica(Datos datosTest);
+    abstract public ArrayList<Elemento> clasifica(Datos datosTest);
 
     // Obtiene el numero de aciertos y errores para calcular la tasa de fallo
     public double error(Datos datos, Clasificador clas) {
         int fallos = 0;
         double error;
         Elemento matriz[][] = datos.getDatos();
-        ArrayList<Integer> clases = this.clasifica(datos);
+        ArrayList<Elemento> clases = this.clasifica(datos);
         
         //Aqui se compara con clases reales y se calcula el error
         for (int i = 0; i < matriz.length; i++) {
             String claseReal = matriz[i][datos.getTamColumn() - 1].getValorNominal();
-            String claseInferida = datos.getClases().get(clases.get(i));
+            String claseInferida = clases.get(i).getValorNominal();
             if (!claseInferida.equals(claseReal)) {
                 fallos++;
             }
