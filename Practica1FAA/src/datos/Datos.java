@@ -6,12 +6,8 @@
 package datos;
 
 import com.csvreader.CsvReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import particionado.Particion;
 
 public class Datos {
@@ -25,6 +21,9 @@ public class Datos {
     
     /* Datos del fichero */
     private Elemento datos[][];
+    
+    /* Posibles clases */
+    private ArrayList<String> clases;
     
     int nDatosCopiados = 0;
     
@@ -94,15 +93,15 @@ public class Datos {
                 for(String elementoString: elementosString){
                     TiposDeAtributos tipo = objetoDatos.getTipoAtributosAt(i);
                     Elemento elemento = ElementoFactory.crear(tipo, elementoString);
-                     elemCopy[i] = elemento;
+                    elemCopy[i] = elemento;
                     i++;
                 }
                 objetoDatos.addLineaDatos(elemCopy);
-                //System.out.println(elemCopy);
-
-
-                // ElementoFactory.crear(tipo, cadena)
-
+                
+                // Además, guardamos la clase (última columna)
+                String clase = elemCopy[elemCopy.length - 1].getValorNominal();
+                if (!objetoDatos.clases.contains(clase))
+                    objetoDatos.getClases().add(clase);
             }
 
             return objetoDatos;
@@ -167,6 +166,13 @@ public class Datos {
      */
     public Elemento[][] getDatos() {
         return datos;
+    }
+
+    /**
+     * @return the clases
+     */
+    public ArrayList<String> getClases() {
+        return clases;
     }
     
 }
