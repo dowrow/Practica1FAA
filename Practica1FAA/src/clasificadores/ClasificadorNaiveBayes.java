@@ -90,10 +90,10 @@ public class ClasificadorNaiveBayes extends Clasificador{
             Elemento mejorClase = null;
             //Elemento ultimoElemFila = fila[fila.length-1];
             double mejorProb = 0;
-            for(String clase : datosTest.getClases()){
+            for(Elemento clase : datosTest.getClases()){
                 
                 //simulacion de la clase, decimos, si fuera esta clase, que prob da
-                Elemento ultimoElemFila = ElementoFactory.crear(TiposDeAtributos.Continuo, clase);
+                Elemento ultimoElemFila = ElementoFactory.crear(TiposDeAtributos.Continuo, clase.getValorNominal());
                 double prob = 0;
                 for(int i = 0; i < (fila.length - 1); i++){
                     /*

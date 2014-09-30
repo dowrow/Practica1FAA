@@ -25,4 +25,18 @@ public class ElementoNominal extends Elemento {
     public int hashCode() {
         return this.valor.hashCode();
     }
+    
+        @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        if (this.getValorNominal().equals( ((ElementoNominal)obj).getValorNominal() )) {
+            return true;
+        }
+        return false;
+    }
 }

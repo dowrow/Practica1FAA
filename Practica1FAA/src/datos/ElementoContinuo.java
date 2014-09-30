@@ -24,6 +24,19 @@ public class ElementoContinuo extends Elemento {
     public int hashCode() {
         return (new Double(valor)).hashCode();
     }
-
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        if (this.getValorContinuo() != ((ElementoContinuo)obj).getValorContinuo()) {
+            return false;
+        }
+        return true;
+    }
     
 } 

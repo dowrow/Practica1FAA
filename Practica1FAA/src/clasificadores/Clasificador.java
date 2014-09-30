@@ -18,12 +18,12 @@ abstract public class Clasificador {
         int fallos = 0;
         double error;
         Elemento matriz[][] = datos.getDatos();
-        ArrayList<Elemento> clases = this.clasifica(datos);
+        ArrayList<Elemento> clases = clas.clasifica(datos);
         
         //Aqui se compara con clases reales y se calcula el error
         for (int i = 0; i < matriz.length; i++) {
-            String claseReal = matriz[i][datos.getTamColumn() - 1].getValorNominal();
-            String claseInferida = clases.get(i).getValorNominal();
+            Elemento claseReal = matriz[i][datos.getTamColumn() - 1];
+            Elemento claseInferida = clases.get(i);
             if (!claseInferida.equals(claseReal)) {
                 fallos++;
             }
@@ -36,11 +36,11 @@ abstract public class Clasificador {
     public static ArrayList<Double> validacion(EstrategiaParticionado part, Datos datos,
             Clasificador clas) {
 
-//Creamos las particiones siguiendo la estrategia llamando a datos.creaParticiones
-//Para validación cruzada: En un bucle hasta nv entrenamos el clasf con la particion de train i(extraerDatosTrain) 
-// y obtenemos el error en la particion test de i (extraerDatosTest)
-//Para validación porcentual entrenamos el clasf con la partición de train (extraerDatosTrain) y 
-// obtenemos el error en la particion test (extraerDatosTest)
+        //Creamos las particiones siguiendo la estrategia llamando a datos.creaParticiones
+        //Para validación cruzada: En un bucle hasta nv entrenamos el clasf con la particion de train i(extraerDatosTrain) 
+        // y obtenemos el error en la particion test de i (extraerDatosTest)
+        //Para validación porcentual entrenamos el clasf con la partición de train (extraerDatosTrain) y 
+        // obtenemos el error en la particion test (extraerDatosTest)
         return null;
     }
 
@@ -55,9 +55,8 @@ abstract public class Clasificador {
         
         EstrategiaParticionado part = new ValidacionCruzada();
         Clasificador c = new ClasificadorAPriori();
-        ArrayList<Double> errores = Clasificador.validacion(part, d, c);
-        // Se imprimen
-        //for (Double error : errores)
-        //    System.out.println(error);
+        c.entrenamiento(d);
+        double error = c.error(d, c);
+        System.out.println("El error es: " + error);
     }
 }

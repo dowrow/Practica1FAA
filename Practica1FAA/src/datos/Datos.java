@@ -23,7 +23,7 @@ public class Datos {
     private Elemento datos[][];
     
     /* Posibles clases */
-    private ArrayList<String> clases;
+    private ArrayList<Elemento> clases;
     
     int nDatosCopiados = 0;
     
@@ -99,18 +99,15 @@ public class Datos {
                 objetoDatos.addLineaDatos(elemCopy);
                 
                 // Además, guardamos la clase (última columna)
-                String clase = elemCopy[elemCopy.length - 1].getValorNominal();
-                ArrayList<String> clasesObjeto = objetoDatos.getClases();
-                if (!clasesObjeto.contains(clase)) {
-                    clasesObjeto.add(clase);
-                    objetoDatos.setClases(clasesObjeto);
+                Elemento clase = elemCopy[elemCopy.length - 1];
+                if (!objetoDatos.clases.contains(clase)) {
+                    objetoDatos.clases.add(clase);
                 }
             }
 
             return objetoDatos;
             
         } catch (Exception e) {
-            System.out.println("ERROR: " + e + " " + e.getLocalizedMessage() + " " + e.getMessage() + " " + e.getStackTrace());
             return null;
         }
     }
@@ -159,9 +156,7 @@ public class Datos {
     
     public void addLineaDatos(Elemento elem[]){
         int nDatos = this.nDatosCopiados;
-        for(int i = 0; i <elem.length; i++ ){
-            this.datos[nDatos][i] = elem[i];
-        }
+        System.arraycopy(elem, 0, this.datos[nDatos], 0, elem.length);
         this.nDatosCopiados++;
     }
 
@@ -175,14 +170,14 @@ public class Datos {
     /**
      * @return the clases
      */
-    public ArrayList<String> getClases() {
+    public ArrayList<Elemento> getClases() {
         return clases;
     }
 
     /**
      * @param clases the clases to set
      */
-    public void setClases(ArrayList<String> clases) {
+    public void setClases(ArrayList<Elemento> clases) {
         this.clases = clases;
     }
     

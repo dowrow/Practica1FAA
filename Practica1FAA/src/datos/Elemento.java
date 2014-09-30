@@ -22,7 +22,6 @@ public  abstract class Elemento{
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Elemento other = (Elemento) obj;
         return true;
     }
 }
