@@ -18,8 +18,9 @@ import java.util.HashMap;
  */
 public class ClasificadorNaiveBayes extends Clasificador{
     //el primer Array nos dice la columna
-    //el primer HashMap nos dice la clase de la columna
-    //el segundo hashmap nos dice la clase resultado a la que se le asigna
+    //el primer HashMap nos dice el valor de la columna
+    //el segundo hashmap cuenta por cada valor de la columna cuantas incidencias 
+    //tiene la clase, para hacer p(D|H)
     ArrayList<HashMap<Elemento, HashMap<Elemento, Integer>>> incidencias;
     
     //cuenta las incidencias totales de cada clase
@@ -48,7 +49,7 @@ public class ClasificadorNaiveBayes extends Clasificador{
                 HashMap<Elemento, HashMap<Elemento, Integer>> incidenciaColumna  = this.incidencias.get(i);
                   
                 if(incidenciaColumna.containsKey(fila[i])){
-                    //se ha encontrado la clase
+                    //se ha encontrado el elemento
                     HashMap<Elemento, Integer> incidenciaClase = incidenciaColumna.get(fila[i]);
                     if(incidenciaClase.containsKey(ultimoElemFila)){
                         Integer contador = incidenciaClase.get(ultimoElemFila);
@@ -60,7 +61,7 @@ public class ClasificadorNaiveBayes extends Clasificador{
                     }
                     
                 }else{
-                    //no se encontraba esta clase en la base de datos
+                    //no se encontraba el elemento en la base de datos
                     HashMap<Elemento, Integer> incidenciaClase = new HashMap<>();
                     Integer contador = 1;
                     incidenciaClase.put(ultimoElemFila, contador);
@@ -90,6 +91,8 @@ public class ClasificadorNaiveBayes extends Clasificador{
             //Elemento ultimoElemFila = fila[fila.length-1];
             double mejorProb = 0;
             for(String clase : datosTest.getClases()){
+                
+                //simulacion de la clase, decimos, si fuera esta clase, que prob da
                 Elemento ultimoElemFila = ElementoFactory.crear(TiposDeAtributos.Continuo, clase);
                 double prob = 0;
                 for(int i = 0; i < (fila.length - 1); i++){
@@ -98,7 +101,7 @@ public class ClasificadorNaiveBayes extends Clasificador{
                         MULi (p(Di|H))
                     */
                     double probAux = this.incidencias.get(i).get(fila[i]).get(ultimoElemFila);
-                    probAux = probAux/this.filasTrain;
+                    probAux = probAux/this.incidenciaClaseTotal.get(ultimoElemFila);
                     if(i == 0){
                         prob = probAux;
                     }else{
