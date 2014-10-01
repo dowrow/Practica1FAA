@@ -39,11 +39,30 @@ public class Datos {
     }
 
     public Datos extraeDatosTrain(Particion idx) {
-        return null;
+        
+        // Crear nuevo objeto Datos
+        ArrayList<Integer> indices = idx.getIndicesTrain();
+        Datos datosTrain = new Datos(indices.size(), this.tipoAtributos);
+        
+        // Introducir filas
+        for(Integer indice : indices) {
+            datosTrain.addLineaDatos(this.datos[indice]);
+        }
+        
+        return datosTrain;
     }
 
     public Datos extraeDatosTest(Particion idx) {
-        return null;
+        // Crear nuevo objeto Datos
+        ArrayList<Integer> indices = idx.getIndicesTest();
+        Datos datosTest = new Datos(indices.size(), this.tipoAtributos);
+        
+        // Introducir filas
+        for(Integer indice : indices) {
+            datosTest.addLineaDatos(this.datos[indice]);
+        }
+        
+        return datosTest;
     }
     
     // 3 Filas: nº datos, nombres de campos, tipos de atributos [Nominal o Continuo]
@@ -145,7 +164,7 @@ public class Datos {
     }
     
     public int getTamColumn(){
-        return this.nombreCampos.size();
+        return this.tipoAtributos.size();
     }
     /**
      * @param nombreCampos the nombreCampos to set

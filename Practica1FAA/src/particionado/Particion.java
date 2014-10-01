@@ -16,4 +16,18 @@ public class Particion {
         this.indicesTrain = indTrain;
         this.indicesTest = indTest;
     }
+
+    /**
+     * @return the indicesTrain
+     */
+    public ArrayList<Integer> getIndicesTrain() {
+        return indicesTrain;
+    }
+
+    /**
+     * @return the indicesTest
+     */
+    public ArrayList<Integer> getIndicesTest() {
+        return indicesTest;
+    }
 }

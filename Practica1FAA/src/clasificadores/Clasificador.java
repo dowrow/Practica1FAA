@@ -4,6 +4,7 @@ import datos.Datos;
 import datos.Elemento;
 import java.util.ArrayList;
 import particionado.EstrategiaParticionado;
+import particionado.Particion;
 import particionado.ValidacionCruzada;
 
 abstract public class Clasificador {
@@ -53,10 +54,19 @@ abstract public class Clasificador {
             d = Datos.cargaDeFichero(args[0]);
         }
         
-        EstrategiaParticionado part = new ValidacionCruzada();
-        Clasificador c = new ClasificadorAPriori();
-        c.entrenamiento(d);
-        double error = c.error(d, c);
-        System.out.println("El error es: " + error);
+        EstrategiaParticionado estrategia = new ValidacionCruzada();
+        ArrayList<Particion> particiones = estrategia.crearParticiones(d.getDatos().length, 10);
+        Clasificador c = new ClasificadorNaiveBayes();
+        
+        for (Particion p : particiones) {
+            
+            Datos datosTrain = d.extraeDatosTrain(p);
+            Datos datosTest = d.extraeDatosTrain(p);
+
+            c.entrenamiento(datosTrain);
+            double error = c.error(datosTest, c);
+            System.out.println("El error es: " + error);
+        }
+
     }
 }
