@@ -23,7 +23,7 @@ public class Datos {
     private Elemento datos[][];
     
     /* Posibles clases */
-    private ArrayList<Elemento> clases;
+    private ArrayList<Elemento> clases = new ArrayList<>();
     
     int nDatosCopiados = 0;
     
@@ -43,7 +43,7 @@ public class Datos {
         // Crear nuevo objeto Datos
         ArrayList<Integer> indices = idx.getIndicesTrain();
         Datos datosTrain = new Datos(indices.size(), this.tipoAtributos);
-        
+        datosTrain.setClases(clases);
         // Introducir filas
         for(Integer indice : indices) {
             datosTrain.addLineaDatos(this.datos[indice]);
@@ -56,7 +56,7 @@ public class Datos {
         // Crear nuevo objeto Datos
         ArrayList<Integer> indices = idx.getIndicesTest();
         Datos datosTest = new Datos(indices.size(), this.tipoAtributos);
-        
+        datosTest.setClases(clases);
         // Introducir filas
         for(Integer indice : indices) {
             datosTest.addLineaDatos(this.datos[indice]);
@@ -123,7 +123,7 @@ public class Datos {
                     objetoDatos.clases.add(clase);
                 }
             }
-
+            
             return objetoDatos;
             
         } catch (Exception e) {

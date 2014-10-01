@@ -29,7 +29,7 @@ abstract public class Clasificador {
                 fallos++;
             }
         }
-        error = fallos / clases.size();
+        error = fallos / (double)clases.size();
         return error;
     }
 
@@ -57,6 +57,7 @@ abstract public class Clasificador {
         EstrategiaParticionado estrategia = new ValidacionCruzada();
         ArrayList<Particion> particiones = estrategia.crearParticiones(d.getDatos().length, 10);
         Clasificador c = new ClasificadorNaiveBayes();
+        //Clasificador c = new ClasificadorAPriori();
         
         for (Particion p : particiones) {
             

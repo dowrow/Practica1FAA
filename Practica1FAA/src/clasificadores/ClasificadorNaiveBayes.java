@@ -36,7 +36,7 @@ public class ClasificadorNaiveBayes extends Clasificador{
         this.incidenciaClaseTotal = new HashMap<>();
         
         //creacion de objetos
-        for(String columna: datosTrain.getNombreCampos()){
+        for(Elemento e: datosTrain.getDatos()[0]){
             HashMap<Elemento, HashMap<Elemento, Integer>> incidenciaColumna = new HashMap<>();
             this.incidencias.add(incidenciaColumna);
         }
@@ -69,7 +69,7 @@ public class ClasificadorNaiveBayes extends Clasificador{
                 }
             }
             //sumar las incidencias de cada clase
-            if(this.incidenciaClaseTotal.containsValue(ultimoElemFila)){
+            if(this.incidenciaClaseTotal.containsKey(ultimoElemFila)){
                 Integer nIncidencias = this.incidenciaClaseTotal.get(ultimoElemFila);
                 nIncidencias++;
                 this.incidenciaClaseTotal.put(ultimoElemFila, nIncidencias);
@@ -90,18 +90,23 @@ public class ClasificadorNaiveBayes extends Clasificador{
             Elemento mejorClase = null;
             //Elemento ultimoElemFila = fila[fila.length-1];
             double mejorProb = 0;
-            for(Elemento clase : datosTest.getClases()){
+            for(Elemento claseTest : datosTest.getClases()){
                 
                 //simulacion de la clase, decimos, si fuera esta clase, que prob da
-                Elemento ultimoElemFila = ElementoFactory.crear(TiposDeAtributos.Continuo, clase.getValorNominal());
+               
                 double prob = 0;
                 for(int i = 0; i < (fila.length - 1); i++){
                     /*
                         prob de el dato dada la hipotesis
                         MULi (p(Di|H))
                     */
-                    double probAux = this.incidencias.get(i).get(fila[i]).get(ultimoElemFila);
-                    probAux = probAux/this.incidenciaClaseTotal.get(ultimoElemFila);
+                    double probAux = 0;
+                    try{
+                        probAux = this.incidencias.get(i).get(fila[i]).get(claseTest);
+                    }catch(Exception e){
+                        
+                    }
+                    probAux = probAux/this.incidenciaClaseTotal.get(claseTest);
                     if(i == 0){
                         prob = probAux;
                     }else{
@@ -111,12 +116,12 @@ public class ClasificadorNaiveBayes extends Clasificador{
                 /*
                     prob de la hipotesis
                 */
-                double probAux = this.incidenciaClaseTotal.get(ultimoElemFila);
+                double probAux = this.incidenciaClaseTotal.get(claseTest);
                 probAux = probAux/this.filasTrain;
                 prob = prob*probAux;
                 if(prob > mejorProb){
                     mejorProb = prob;
-                    mejorClase = ultimoElemFila;
+                    mejorClase = claseTest;
                 }
             }
             /*fin del iterador de las clases*/
