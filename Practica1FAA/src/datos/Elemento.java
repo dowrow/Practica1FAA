@@ -9,13 +9,13 @@ package datos;
  * @author Diego
  */
 public  abstract class Elemento{
-  public abstract String getValorNominal();
-  public abstract double getValorContinuo();
-  @Override
-  public abstract int hashCode();
+    public abstract String getValorNominal();
+    public abstract double getValorContinuo();
+    @Override
+    public abstract int hashCode();
 
-  @Override
-  public boolean equals(Object obj) {
+    @Override
+    public boolean equals(Object obj) {
         if (obj == null) {
             return false;
         }
@@ -24,4 +24,6 @@ public  abstract class Elemento{
         }
         return true;
     }
+    
+    public abstract TiposDeAtributos getTipo();
 }

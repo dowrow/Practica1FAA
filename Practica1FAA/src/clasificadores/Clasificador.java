@@ -38,6 +38,7 @@ abstract public class Clasificador {
             Clasificador clas) {
 
         //Creamos las particiones siguiendo la estrategia llamando a datos.creaParticiones
+        
         //Para validación cruzada: En un bucle hasta nv entrenamos el clasf con la particion de train i(extraerDatosTrain) 
         // y obtenemos el error en la particion test de i (extraerDatosTest)
         //Para validación porcentual entrenamos el clasf con la partición de train (extraerDatosTrain) y 

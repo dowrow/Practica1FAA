@@ -38,5 +38,10 @@ public class ElementoContinuo extends Elemento {
         }
         return true;
     }
+
+    @Override
+    public TiposDeAtributos getTipo() {
+        return TiposDeAtributos.Continuo;
+    }
     
 } 

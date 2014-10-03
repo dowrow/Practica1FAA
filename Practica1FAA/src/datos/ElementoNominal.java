@@ -39,4 +39,9 @@ public class ElementoNominal extends Elemento {
         }
         return false;
     }
+    
+    @Override
+    public TiposDeAtributos getTipo() {
+        return TiposDeAtributos.Continuo;
+    }
 }
