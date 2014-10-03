@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package clasificadores;
 
 import datos.Datos;
@@ -11,6 +6,8 @@ import datos.ElementoFactory;
 import datos.TiposDeAtributos;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+
 
 /**
  *
@@ -29,54 +26,71 @@ public class ClasificadorNaiveBayes extends Clasificador{
     //filas totales de train
     int filasTrain = 0;
     
-
+    private HashMap<Elemento, Integer> generarTablaUnos (Datos d) {
+        ArrayList<Elemento> clases = d.getClases();
+        HashMap<Elemento, Integer> tabla = new HashMap<>();
+        for (Elemento clase : clases) {
+            tabla.put(clase, 1);
+        }
+        return tabla;
+    }
+    private HashMap<Elemento, Integer> generarTablaCeros (Datos d) {
+        ArrayList<Elemento> clases = d.getClases();
+        HashMap<Elemento, Integer> tabla = new HashMap<>();
+        for (Elemento clase : clases) {
+            tabla.put(clase, 0);
+        }
+        return tabla;
+    }
+    
     @Override
     public void entrenamiento(Datos datosTrain) {
         this.incidencias = new ArrayList<>();
-        this.incidenciaClaseTotal = new HashMap<>();
+        this.incidenciaClaseTotal = this.generarTablaCeros(datosTrain);
         
-        //creacion de objetos
+        // Crea un hashmap de hashmaps para cada columna
         for(Elemento e: datosTrain.getDatos()[0]){
             HashMap<Elemento, HashMap<Elemento, Integer>> incidenciaColumna = new HashMap<>();
             this.incidencias.add(incidenciaColumna);
         }
         
-        
         for(Elemento fila[] : datosTrain.getDatos()){
             this.filasTrain++;
-            Elemento ultimoElemFila = fila[fila.length-1];
+            Elemento clase = fila[fila.length-1];
             for(int i = 0; i < (fila.length - 1); i++){
                 HashMap<Elemento, HashMap<Elemento, Integer>> incidenciaColumna  = this.incidencias.get(i);
-                  
+                // Si el valor de la columna ya está en el hashmap
                 if(incidenciaColumna.containsKey(fila[i])){
                     //se ha encontrado el elemento
                     HashMap<Elemento, Integer> incidenciaClase = incidenciaColumna.get(fila[i]);
-                    if(incidenciaClase.containsKey(ultimoElemFila)){
-                        Integer contador = incidenciaClase.get(ultimoElemFila);
+                    if(incidenciaClase.containsKey(clase)){
+                        Integer contador = incidenciaClase.get(clase);
                         contador++;
-                        incidenciaClase.put(ultimoElemFila, contador);
-                    }else{
-                        Integer contador = 1;
-                        incidenciaClase.put(ultimoElemFila, contador);
+                        incidenciaClase.put(clase, contador);
                     }
                     
                 }else{
                     //no se encontraba el elemento en la base de datos
-                    HashMap<Elemento, Integer> incidenciaClase = new HashMap<>();
-                    Integer contador = 1;
-                    incidenciaClase.put(ultimoElemFila, contador);
+                    HashMap<Elemento, Integer> incidenciaClase = this.generarTablaUnos(datosTrain);
+                    Integer contador = incidenciaClase.get(clase);
+                    contador++;
+                    incidenciaClase.put(clase, contador);
                     incidenciaColumna.put(fila[i], incidenciaClase);
+                    
+                    //para hacer laplace, cada vez que generas la tabla de unos
+                    //sumas uno a las incidencias de clases totales
+                    for(Elemento claseAux : datosTrain.getClases()){
+                        Integer nIncidencias = this.incidenciaClaseTotal.get(clase);
+                        nIncidencias++;
+                        this.incidenciaClaseTotal.put(clase, nIncidencias);
+                    }
                 }
             }
             //sumar las incidencias de cada clase
-            if(this.incidenciaClaseTotal.containsKey(ultimoElemFila)){
-                Integer nIncidencias = this.incidenciaClaseTotal.get(ultimoElemFila);
-                nIncidencias++;
-                this.incidenciaClaseTotal.put(ultimoElemFila, nIncidencias);
-            }else{
-                Integer nIncidencias = 1;
-                this.incidenciaClaseTotal.put(ultimoElemFila, nIncidencias);
-            }
+            Integer nIncidencias = this.incidenciaClaseTotal.get(clase);
+            nIncidencias++;
+            this.incidenciaClaseTotal.put(clase, nIncidencias);
+           
         }
         
     }
