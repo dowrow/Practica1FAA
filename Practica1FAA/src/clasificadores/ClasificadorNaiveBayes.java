@@ -80,9 +80,9 @@ public class ClasificadorNaiveBayes extends Clasificador{
                     //para hacer laplace, cada vez que generas la tabla de unos
                     //sumas uno a las incidencias de clases totales
                     for(Elemento claseAux : datosTrain.getClases()){
-                        Integer nIncidencias = this.incidenciaClaseTotal.get(clase);
+                        Integer nIncidencias = this.incidenciaClaseTotal.get(claseAux);
                         nIncidencias++;
-                        this.incidenciaClaseTotal.put(clase, nIncidencias);
+                        this.incidenciaClaseTotal.put(claseAux, nIncidencias);
                     }
                 }
             }
@@ -118,7 +118,7 @@ public class ClasificadorNaiveBayes extends Clasificador{
                     try{
                         probAux = this.incidencias.get(i).get(fila[i]).get(claseTest);
                     }catch(Exception e){
-                        
+                        probAux = 1;
                     }
                     probAux = probAux/this.incidenciaClaseTotal.get(claseTest);
                     if(i == 0){

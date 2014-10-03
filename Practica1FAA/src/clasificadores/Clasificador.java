@@ -3,6 +3,7 @@ package clasificadores;
 import datos.Datos;
 import datos.Elemento;
 import java.util.ArrayList;
+import particionado.DivisionPorcentual;
 import particionado.EstrategiaParticionado;
 import particionado.Particion;
 import particionado.ValidacionCruzada;
@@ -29,46 +30,43 @@ abstract public class Clasificador {
                 fallos++;
             }
         }
-        error = fallos / (double)clases.size();
+        error = (double)fallos / (double)clases.size();
         return error;
     }
 
     // Realiza una clasificacion utilizando una estrategia de particionado determinada
     public static ArrayList<Double> validacion(EstrategiaParticionado part, Datos datos,
             Clasificador clas) {
-
-        //Creamos las particiones siguiendo la estrategia llamando a datos.creaParticiones
+        ArrayList<Double> errores = new ArrayList<>();
         
-        //Para validación cruzada: En un bucle hasta nv entrenamos el clasf con la particion de train i(extraerDatosTrain) 
-        // y obtenemos el error en la particion test de i (extraerDatosTest)
-        //Para validación porcentual entrenamos el clasf con la partición de train (extraerDatosTrain) y 
-        // obtenemos el error en la particion test (extraerDatosTest)
-        return null;
+        //Creamos las particiones siguiendo la estrategia llamando a datos.creaParticiones
+        ArrayList<Particion> particiones = part.crearParticiones(datos.getDatos().length, 2);
+
+        //Para validación cruzada: En un bucle hasta nv entrenamos el clasf con la particion de train i(extraerDatosTrain)
+                // y obtenemos el error en la particion test de i (extraerDatosTest)
+
+        for (Particion particion : particiones) {
+            Datos datosTrain = datos.extraeDatosTrain(particion);
+            Datos datosTest = datos.extraeDatosTest(particion);
+            clas.entrenamiento(datosTrain);
+            errores.add(clas.error(datosTest,clas));
+        }
+        
+        return errores;
     }
 
     public static void main(String[] args) {
-        Datos d;
+        Datos datos;
         if(args.length < 1){
             /*debug*/
-            d = Datos.cargaDeFichero("./src/car.data");
+            datos = Datos.cargaDeFichero("./src/car.data");
         }else{
-            d = Datos.cargaDeFichero(args[0]);
+            datos = Datos.cargaDeFichero(args[0]);
         }
         
-        EstrategiaParticionado estrategia = new ValidacionCruzada();
-        ArrayList<Particion> particiones = estrategia.crearParticiones(d.getDatos().length, 10);
-        Clasificador c = new ClasificadorNaiveBayes();
-        //Clasificador c = new ClasificadorAPriori();
-        
-        for (Particion p : particiones) {
-            
-            Datos datosTrain = d.extraeDatosTrain(p);
-            Datos datosTest = d.extraeDatosTrain(p);
-
-            c.entrenamiento(datosTrain);
-            double error = c.error(datosTest, c);
-            System.out.println("El error es: " + error);
-        }
-
+        EstrategiaParticionado estrategia = new DivisionPorcentual();
+        Clasificador clasificador = new ClasificadorNaiveBayes();
+        ArrayList<Double> errores = Clasificador.validacion(estrategia, datos, clasificador);
+        System.out.println("Los errores son: " + errores);
     }
 }
