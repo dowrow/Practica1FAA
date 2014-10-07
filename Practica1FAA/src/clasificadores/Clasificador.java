@@ -64,9 +64,13 @@ abstract public class Clasificador {
             datos = Datos.cargaDeFichero(args[0]);
         }
         
-        EstrategiaParticionado estrategia = new DivisionPorcentual();
+        //EstrategiaParticionado estrategia = new DivisionPorcentual();
+        EstrategiaParticionado estrategia = new ValidacionCruzada();
         Clasificador clasificador = new ClasificadorNaiveBayes();
+        Clasificador clasificador2 = new ClasificadorNaiveBayesLaplace();
         ArrayList<Double> errores = Clasificador.validacion(estrategia, datos, clasificador);
         System.out.println("Los errores son: " + errores);
+        ArrayList<Double> errores2= Clasificador.validacion(estrategia, datos, clasificador2);
+        System.out.println("Los errores2 son: " + errores2);
     }
 }

@@ -13,7 +13,7 @@ import java.util.HashMap;
  *
  * @author dani
  */
-public class ClasificadorNaiveBayes extends Clasificador{
+public class ClasificadorNaiveBayesLaplace extends Clasificador{
     //el primer Array nos dice la columna
     //el primer HashMap nos dice el valor de la columna
     //el segundo hashmap cuenta por cada valor de la columna cuantas incidencias 
@@ -25,7 +25,7 @@ public class ClasificadorNaiveBayes extends Clasificador{
     
     //filas totales de train
     int filasTrain = 0;
-    /*
+    
     private HashMap<Elemento, Integer> generarTablaUnos (Datos d) {
         ArrayList<Elemento> clases = d.getClases();
         HashMap<Elemento, Integer> tabla = new HashMap<>();
@@ -33,7 +33,7 @@ public class ClasificadorNaiveBayes extends Clasificador{
             tabla.put(clase, 1);
         }
         return tabla;
-    }*/
+    }
     private HashMap<Elemento, Integer> generarTablaCeros (Datos d) {
         ArrayList<Elemento> clases = d.getClases();
         HashMap<Elemento, Integer> tabla = new HashMap<>();
@@ -71,7 +71,7 @@ public class ClasificadorNaiveBayes extends Clasificador{
                     
                 }else{
                     //no se encontraba el elemento en la base de datos
-                    HashMap<Elemento, Integer> incidenciaClase = this.generarTablaCeros(datosTrain);
+                    HashMap<Elemento, Integer> incidenciaClase = this.generarTablaUnos(datosTrain);
                     Integer contador = incidenciaClase.get(clase);
                     contador++;
                     incidenciaClase.put(clase, contador);
@@ -117,11 +117,12 @@ public class ClasificadorNaiveBayes extends Clasificador{
                     double probAux = 0;
                     try{
                         probAux = this.incidencias.get(i).get(fila[i]).get(claseTest);
+                        probAux = probAux/this.incidenciaClaseTotal.get(claseTest);
                     }catch(Exception e){
-                        //probAux = 1;
-                        probAux = 0;
+                        probAux = 1;
+                        probAux = probAux/this.incidenciaClaseTotal.get(claseTest);
                     }
-                    probAux = probAux/this.incidenciaClaseTotal.get(claseTest);
+                    
                     if(i == 0){
                         prob = probAux;
                     }else{
