@@ -14,26 +14,24 @@ import java.util.HashMap;
  * @author dani
  */
 public class ClasificadorNaiveBayes extends Clasificador{
-    //el primer Array nos dice la columna
-    //el primer HashMap nos dice el valor de la columna
-    //el segundo hashmap cuenta por cada valor de la columna cuantas incidencias 
-    //tiene la clase, para hacer p(D|H)
+    // El primer Array nos dice la columna
+    // El primer HashMap nos dice el valor de la columna
+    // El segundo hashmap cuenta por cada valor de la columna cuantas incidencias 
+    // Tiene la clase, para hacer p(D|H)
     ArrayList<HashMap<Elemento, HashMap<Elemento, Integer>>> incidencias;
     
-    //cuenta las incidencias totales de cada clase
+    // Cuenta las incidencias totales de cada clase
     HashMap<Elemento, Integer> incidenciaClaseTotal;
     
-    //filas totales de train
+    // Filas totales de train
     int filasTrain = 0;
-    /*
-    private HashMap<Elemento, Integer> generarTablaUnos (Datos d) {
-        ArrayList<Elemento> clases = d.getClases();
-        HashMap<Elemento, Integer> tabla = new HashMap<>();
-        for (Elemento clase : clases) {
-            tabla.put(clase, 1);
-        }
-        return tabla;
-    }*/
+    
+    // Medias y varianzas de los atributos continuos dadas las clases
+    // Primer HashMap = Clase
+    // Primer ArrayList = Columna
+    // Segundo ArrayList = [Media, Varianza]
+    HashMap<Elemento, ArrayList<ArrayList<Double>>> tablaNormal;
+    
     private HashMap<Elemento, Integer> generarTablaCeros (Datos d) {
         ArrayList<Elemento> clases = d.getClases();
         HashMap<Elemento, Integer> tabla = new HashMap<>();
@@ -48,12 +46,28 @@ public class ClasificadorNaiveBayes extends Clasificador{
         this.incidencias = new ArrayList<>();
         this.incidenciaClaseTotal = this.generarTablaCeros(datosTrain);
         
+        ArrayList<Double> mediaVarianza = new ArrayList<>();
+        // Inicialmente media = 0
+        mediaVarianza.add(0.0);
+        // Inicialmente varianza = 0
+        mediaVarianza.add(0.0);
+        
+        // Crear hashmap de clases
+        /*
+        for (Elemento clase : datosTrain.getClases()) {
+            ArrayList<ArrayList<Double>> columnas = new ArrayList<>();
+            for (String campo : datosTrain.getNombreCampos()) {
+                columnas.add(mediaVarianza);
+            }
+            this.tablaNormal.put(clase, null);
+        }
+         */
         // Crea un hashmap de hashmaps para cada columna
         for(Elemento e: datosTrain.getDatos()[0]){
             HashMap<Elemento, HashMap<Elemento, Integer>> incidenciaColumna = new HashMap<>();
             this.incidencias.add(incidenciaColumna);
         }
-        
+       
         for(Elemento fila[] : datosTrain.getDatos()){
             this.filasTrain++;
             Elemento clase = fila[fila.length-1];
@@ -102,11 +116,10 @@ public class ClasificadorNaiveBayes extends Clasificador{
         
         for(Elemento fila[] : datosTest.getDatos()){
             Elemento mejorClase = null;
-            //Elemento ultimoElemFila = fila[fila.length-1];
             double mejorProb = -1;
             for(Elemento claseTest : datosTest.getClases()){
                 
-                //simulacion de la clase, decimos, si fuera esta clase, que prob da
+                // Simulacion de la clase, decimos, si fuera esta clase, que prob da
                
                 double prob = 0;
                 for(int i = 0; i < (fila.length - 1); i++){
@@ -114,19 +127,31 @@ public class ClasificadorNaiveBayes extends Clasificador{
                         prob de el dato dada la hipotesis
                         MULi (p(Di|H))
                     */
-                    double probAux = 0;
-                    try{
-                        probAux = this.incidencias.get(i).get(fila[i]).get(claseTest);
-                    }catch(Exception e){
-                        //probAux = 1;
-                        probAux = 0;
+                    double probAux;
+                    
+                    if (fila[i].getTipo().equals(TiposDeAtributos.Continuo)) {
+                        /* Si el dato es continuo */
+                        // Sacar la media y varianza del atributo dada la clase claseTest0;
+                        // double media = 
+                        // double varianza = 
+                        // Calcular P(D|H) según func. de dist. de una normal
+                        // probAux = (e ^ ((fila[i].getValorContinuo() - media) ^ 2) / (2 * varianza))) / (double) sqrt(2 * PI * varianza);
+                        
+                    } else {
+                        /* Si el dato es nominal */
+                        try{
+                            probAux = this.incidencias.get(i).get(fila[i]).get(claseTest);
+                        }catch(Exception e){
+                            probAux = 0;
+                        }
+                        probAux = probAux/this.incidenciaClaseTotal.get(claseTest);
+                        if(i == 0){
+                            prob = probAux;
+                        }else{
+                            prob = prob*probAux;
+                        }
                     }
-                    probAux = probAux/this.incidenciaClaseTotal.get(claseTest);
-                    if(i == 0){
-                        prob = probAux;
-                    }else{
-                        prob = prob*probAux;
-                    }
+                                        
                 }
                 /*
                     prob de la hipotesis

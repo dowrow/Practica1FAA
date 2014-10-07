@@ -7,8 +7,6 @@ import datos.TiposDeAtributos;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
-
 /**
  *
  * @author dani
@@ -45,6 +43,7 @@ public class ClasificadorNaiveBayesLaplace extends Clasificador{
     
     @Override
     public void entrenamiento(Datos datosTrain) {
+        
         this.incidencias = new ArrayList<>();
         this.incidenciaClaseTotal = this.generarTablaCeros(datosTrain);
         
