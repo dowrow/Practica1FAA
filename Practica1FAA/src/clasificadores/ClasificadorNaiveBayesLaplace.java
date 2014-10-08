@@ -24,6 +24,12 @@ public class ClasificadorNaiveBayesLaplace extends Clasificador{
     //filas totales de train
     int filasTrain = 0;
     
+    // Medias y varianzas de los atributos continuos dadas las clases
+    // Primer HashMap = Clase
+    // Primer ArrayList = Columna
+    HashMap<Elemento, ArrayList<Double>> medias;
+    HashMap<Elemento, ArrayList<Double>> varianzas; 
+    
     private HashMap<Elemento, Integer> generarTablaUnos (Datos d) {
         ArrayList<Elemento> clases = d.getClases();
         HashMap<Elemento, Integer> tabla = new HashMap<>();
@@ -40,12 +46,80 @@ public class ClasificadorNaiveBayesLaplace extends Clasificador{
         }
         return tabla;
     }
+    private double calcularMedia(ArrayList<Elemento> elementos) {
+        double media = 0.0;
+        for (Elemento e : elementos) {
+            media += e.getValorContinuo();
+        }
+        media = media / (double) elementos.size();
+        return media;
+    }
     
+    private double calcularVarianza(ArrayList<Elemento> elementos) {
+        double varianza = 0.0;
+        double media = calcularMedia(elementos);
+        
+        for (Elemento e : elementos) {
+            varianza += Math.pow(e.getValorContinuo() - media, 2);
+        }
+        
+        varianza = varianza / (double) elementos.size();
+        return varianza;
+    }
     @Override
     public void entrenamiento(Datos datosTrain) {
         
         this.incidencias = new ArrayList<>();
         this.incidenciaClaseTotal = this.generarTablaCeros(datosTrain);
+        this.medias = new HashMap<>();
+        this.varianzas = new HashMap<>();
+        
+        // Inicializa medias y varianzas por clase
+        for (Elemento clase : datosTrain.getClases()) {
+            ArrayList<Double> columnas = new ArrayList<>();
+            ArrayList<Double> columnas2 = new ArrayList<>();
+            for (int i = 0; i < datosTrain.getTamColumn(); i++) {
+                columnas.add(0.0);
+                columnas2.add(0.0);
+            }
+            this.medias.put(clase, columnas);
+            this.varianzas.put(clase, columnas2);
+        }
+        
+        // Calcula media y varianza de las columnas continuas por cada clase
+        
+        // Para cada clase
+        for (Elemento clase: datosTrain.getClases()) {
+            
+            // Para cada columna
+            int tamcolumn = datosTrain.getTamColumn() - 1;
+            for (int i = 0; i < tamcolumn; i++) {
+                
+                ArrayList<Elemento> elementosContinuos = new ArrayList<>();
+                
+                // Recorrer las filas
+                for (Elemento fila[] : datosTrain.getDatos()) {
+                    
+                    // Si la fila es de la clase y la columa continua
+                    if (fila[fila.length - 1].equals(clase) && 
+                            fila[i].getTipo().equals(TiposDeAtributos.Continuo)) {
+                        
+                        elementosContinuos.add(fila[i]);
+                    }
+                }
+                
+                // Calcular media de elementosContinuos
+                double media = this.calcularMedia(elementosContinuos);                
+                // Calcular varianza de elementosContinuos
+                double varianza = this.calcularVarianza(elementosContinuos);
+                
+                // Guardas valores
+                this.medias.get(clase).set(i, media);
+                this.varianzas.get(clase).set(i, varianza);
+                
+            }
+        }
+        
         
         // Crea un hashmap de hashmaps para cada columna
         for(Elemento e: datosTrain.getDatos()[0]){
@@ -107,31 +181,51 @@ public class ClasificadorNaiveBayesLaplace extends Clasificador{
                 
                 //simulacion de la clase, decimos, si fuera esta clase, que prob da
                
-                double prob = 0;
+                double prob = -1;
                 for(int i = 0; i < (fila.length - 1); i++){
                     /*
                         prob de el dato dada la hipotesis
                         MULi (p(Di|H))
                     */
                     double probAux = 0;
-                    try{
-                        probAux = this.incidencias.get(i).get(fila[i]).get(claseTest);
+                    if (fila[i].getTipo().equals(TiposDeAtributos.Continuo)) {
+                        /* Si el dato es continuo */
+                        // Sacar la media y varianza del atributo dada la clase claseTest0;
+                        double media = this.medias.get(claseTest).get(i);
+                        double varianza = this.varianzas.get(claseTest).get(i);
+                        // Calcular P(D|H) según func. de dist. de una normal
+                        double elevado = (fila[i].getValorContinuo() - media);
+                        elevado = - (Math.pow(elevado, 2.0) / (double)(2.0 * varianza));
+                        elevado = Math.pow(Math.E, elevado);
+                        probAux = elevado / (double) Math.sqrt(2.0 * Math.PI * varianza);
+                        if(i == 0){
+                            prob = probAux;
+                        }else{
+                            prob = prob*probAux;
+                        }
+                        
+                    } else {
+                        /* Si el dato es nominal */
+                        try{
+                            probAux = this.incidencias.get(i).get(fila[i]).get(claseTest);
+                        }catch(Exception e){
+                            probAux = 0;
+                        }
                         probAux = probAux/this.incidenciaClaseTotal.get(claseTest);
-                    }catch(Exception e){
-                        probAux = 1;
-                        probAux = probAux/this.incidenciaClaseTotal.get(claseTest);
-                    }
-                    
-                    if(i == 0){
-                        prob = probAux;
-                    }else{
-                        prob = prob*probAux;
+                        if(i == 0){
+                            prob = probAux;
+                        }else{
+                            prob = prob*probAux;
+                        }
                     }
                 }
                 /*
                     prob de la hipotesis
                 */
                 double probAux = this.incidenciaClaseTotal.get(claseTest);
+                if(probAux == 0){
+                    probAux = 1;
+                }
                 probAux = probAux/this.filasTrain;
                 prob = prob*probAux;
                 if(prob > mejorProb){

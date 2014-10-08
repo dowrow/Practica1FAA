@@ -110,9 +110,8 @@ public class ClasificadorNaiveBayes extends Clasificador{
                 double varianza = this.calcularVarianza(elementosContinuos);
                 
                 // Guardas valores
-                ArrayList<Double> mediasAux = this.medias.get(clase);
-                mediasAux.set(i, media);
-                //this.medias.get(clase).set(i, media);
+
+                this.medias.get(clase).set(i, media);
                 this.varianzas.get(clase).set(i, varianza);
                 
             }
@@ -178,7 +177,7 @@ public class ClasificadorNaiveBayes extends Clasificador{
                 
                 // Simulacion de la clase, decimos, si fuera esta clase, que prob da
                
-                double prob = 0;
+                double prob = -1;
                 for(int i = 0; i < (fila.length - 1); i++){
                     /*
                         prob de el dato dada la hipotesis
