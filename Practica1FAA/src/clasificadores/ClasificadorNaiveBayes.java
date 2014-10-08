@@ -73,11 +73,13 @@ public class ClasificadorNaiveBayes extends Clasificador{
         // Inicializa medias y varianzas por clase
         for (Elemento clase : datosTrain.getClases()) {
             ArrayList<Double> columnas = new ArrayList<>();
+            ArrayList<Double> columnas2 = new ArrayList<>();
             for (int i = 0; i < datosTrain.getTamColumn(); i++) {
                 columnas.add(0.0);
+                columnas2.add(0.0);
             }
             this.medias.put(clase, columnas);
-            this.varianzas.put(clase, columnas);
+            this.varianzas.put(clase, columnas2);
         }
         
         // Calcula media y varianza de las columnas continuas por cada clase
@@ -86,7 +88,8 @@ public class ClasificadorNaiveBayes extends Clasificador{
         for (Elemento clase: datosTrain.getClases()) {
             
             // Para cada columna
-            for (int i = 0; i < datosTrain.getTamColumn(); i++) {
+            int tamcolumn = datosTrain.getTamColumn() - 1;
+            for (int i = 0; i < tamcolumn; i++) {
                 
                 ArrayList<Elemento> elementosContinuos = new ArrayList<>();
                 
@@ -102,14 +105,15 @@ public class ClasificadorNaiveBayes extends Clasificador{
                 }
                 
                 // Calcular media de elementosContinuos
-                double media = this.calcularMedia(elementosContinuos); // TO DO
-                
+                double media = this.calcularMedia(elementosContinuos);                
                 // Calcular varianza de elementosContinuos
-                double varianza = this.calcularVarianza(elementosContinuos); // TO DO
+                double varianza = this.calcularVarianza(elementosContinuos);
                 
                 // Guardas valores
-                this.medias.get(clase).add(media);
-                this.varianzas.get(clase).add(varianza);
+                ArrayList<Double> mediasAux = this.medias.get(clase);
+                mediasAux.set(i, media);
+                //this.medias.get(clase).set(i, media);
+                this.varianzas.get(clase).set(i, varianza);
                 
             }
         }
@@ -185,10 +189,18 @@ public class ClasificadorNaiveBayes extends Clasificador{
                     if (fila[i].getTipo().equals(TiposDeAtributos.Continuo)) {
                         /* Si el dato es continuo */
                         // Sacar la media y varianza del atributo dada la clase claseTest0;
-                        // double media = 
-                        // double varianza = 
+                        double media = this.medias.get(claseTest).get(i);
+                        double varianza = this.varianzas.get(claseTest).get(i);
                         // Calcular P(D|H) según func. de dist. de una normal
-                        // probAux = (e ^ ((fila[i].getValorContinuo() - media) ^ 2) / (2 * varianza))) / (double) sqrt(2 * PI * varianza);
+                        double elevado = (fila[i].getValorContinuo() - media);
+                        elevado = - (Math.pow(elevado, 2.0) / (double)(2.0 * varianza));
+                        elevado = Math.pow(Math.E, elevado);
+                        probAux = elevado / (double) Math.sqrt(2.0 * Math.PI * varianza);
+                        if(i == 0){
+                            prob = probAux;
+                        }else{
+                            prob = prob*probAux;
+                        }
                         
                     } else {
                         /* Si el dato es nominal */

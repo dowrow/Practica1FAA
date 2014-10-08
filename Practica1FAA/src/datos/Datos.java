@@ -164,7 +164,7 @@ public class Datos {
     }
     
     public int getTamColumn(){
-        return this.tipoAtributos.size();
+        return this.datos[0].length;
     }
     /**
      * @param nombreCampos the nombreCampos to set

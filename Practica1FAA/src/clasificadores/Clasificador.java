@@ -40,7 +40,7 @@ abstract public class Clasificador {
         ArrayList<Double> errores = new ArrayList<>();
         
         //Creamos las particiones siguiendo la estrategia llamando a datos.creaParticiones
-        ArrayList<Particion> particiones = part.crearParticiones(datos.getDatos().length, 10);
+        ArrayList<Particion> particiones = part.crearParticiones(datos.getDatos().length, 4);
 
         //Para validación cruzada: En un bucle hasta nv entrenamos el clasf con la particion de train i(extraerDatosTrain)
                 // y obtenemos el error en la particion test de i (extraerDatosTest)
@@ -81,8 +81,8 @@ abstract public class Clasificador {
         ArrayList<Double> errores = Clasificador.validacion(estrategia, datos, clasificador);
         System.out.println("Los errores son: " + errores);
         System.out.println("Error medio: " + calculateAverage(errores));
-        ArrayList<Double> errores2= Clasificador.validacion(estrategia, datos, clasificador2);
+        /*ArrayList<Double> errores2= Clasificador.validacion(estrategia, datos, clasificador2);
         System.out.println("Los errores2 son: " + errores2);
-        System.out.println("Error medio: " + calculateAverage(errores2));
+        System.out.println("Error medio: " + calculateAverage(errores2));*/
     }
 }
