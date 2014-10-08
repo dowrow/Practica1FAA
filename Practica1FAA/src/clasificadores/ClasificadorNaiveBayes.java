@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 /**
  *
- * @author dani
+ * @author dani, diego
  */
 public class ClasificadorNaiveBayes extends Clasificador{
     // El primer Array nos dice la columna

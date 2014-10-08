@@ -40,7 +40,7 @@ abstract public class Clasificador {
         ArrayList<Double> errores = new ArrayList<>();
         
         //Creamos las particiones siguiendo la estrategia llamando a datos.creaParticiones
-        ArrayList<Particion> particiones = part.crearParticiones(datos.getDatos().length, 20);
+        ArrayList<Particion> particiones = part.crearParticiones(datos.getDatos().length, 10);
 
         //Para validación cruzada: En un bucle hasta nv entrenamos el clasf con la particion de train i(extraerDatosTrain)
                 // y obtenemos el error en la particion test de i (extraerDatosTest)
@@ -69,7 +69,7 @@ abstract public class Clasificador {
         Datos datos;
         if(args.length < 1){
             /*debug*/
-            datos = Datos.cargaDeFichero("./src/iris.data");
+            datos = Datos.cargaDeFichero("./src/lenses.data");
         }else{
             datos = Datos.cargaDeFichero(args[0]);
         }
@@ -78,11 +78,18 @@ abstract public class Clasificador {
         EstrategiaParticionado estrategia = new ValidacionCruzada();
         Clasificador clasificador = new ClasificadorNaiveBayes();
         Clasificador clasificador2 = new ClasificadorNaiveBayesLaplace();
+        Clasificador clasificador3 = new ClasificadorAPriori();
+        
         ArrayList<Double> errores = Clasificador.validacion(estrategia, datos, clasificador);
         System.out.println("Los errores son: " + errores);
         System.out.println("Error medio: " + calculateAverage(errores));
+        
         ArrayList<Double> errores2= Clasificador.validacion(estrategia, datos, clasificador2);
         System.out.println("Los errores2 son: " + errores2);
         System.out.println("Error medio: " + calculateAverage(errores2));
+        
+        ArrayList<Double> errores3= Clasificador.validacion(estrategia, datos, clasificador3);
+        System.out.println("Los errores3 son: " + errores3);
+        System.out.println("Error medio: " + calculateAverage(errores3));
     }
 }
