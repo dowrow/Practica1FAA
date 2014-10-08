@@ -42,11 +42,34 @@ public class ClasificadorNaiveBayes extends Clasificador{
         return tabla;
     }
     
+    private double calcularMedia(ArrayList<Elemento> elementos) {
+        double media = 0.0;
+        for (Elemento e : elementos) {
+            media += e.getValorContinuo();
+        }
+        media = media / (double) elementos.size();
+        return media;
+    }
+    
+    private double calcularVarianza(ArrayList<Elemento> elementos) {
+        double varianza = 0.0;
+        double media = calcularMedia(elementos);
+        
+        for (Elemento e : elementos) {
+            varianza += Math.pow(e.getValorContinuo() - media, 2);
+        }
+        
+        varianza = varianza / (double) elementos.size();
+        return varianza;
+    }
+    
     @Override
     public void entrenamiento(Datos datosTrain) {
         this.incidencias = new ArrayList<>();
         this.incidenciaClaseTotal = this.generarTablaCeros(datosTrain);
-       
+        this.medias = new HashMap<>();
+        this.varianzas = new HashMap<>();
+        
         // Inicializa medias y varianzas por clase
         for (Elemento clase : datosTrain.getClases()) {
             ArrayList<Double> columnas = new ArrayList<>();
