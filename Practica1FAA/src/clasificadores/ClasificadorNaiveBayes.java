@@ -2,6 +2,7 @@ package clasificadores;
 
 import datos.Datos;
 import datos.Elemento;
+import datos.ElementoContinuo;
 import datos.ElementoFactory;
 import datos.TiposDeAtributos;
 import java.util.ArrayList;
@@ -29,8 +30,8 @@ public class ClasificadorNaiveBayes extends Clasificador{
     // Medias y varianzas de los atributos continuos dadas las clases
     // Primer HashMap = Clase
     // Primer ArrayList = Columna
-    // Segundo ArrayList = [Media, Varianza]
-    HashMap<Elemento, ArrayList<ArrayList<Double>>> tablaNormal;
+    HashMap<Elemento, ArrayList<Double>> medias;
+    HashMap<Elemento, ArrayList<Double>> varianzas; 
     
     private HashMap<Elemento, Integer> generarTablaCeros (Datos d) {
         ArrayList<Elemento> clases = d.getClases();
@@ -45,23 +46,52 @@ public class ClasificadorNaiveBayes extends Clasificador{
     public void entrenamiento(Datos datosTrain) {
         this.incidencias = new ArrayList<>();
         this.incidenciaClaseTotal = this.generarTablaCeros(datosTrain);
-        
-        ArrayList<Double> mediaVarianza = new ArrayList<>();
-        // Inicialmente media = 0
-        mediaVarianza.add(0.0);
-        // Inicialmente varianza = 0
-        mediaVarianza.add(0.0);
-        
-        // Crear hashmap de clases
-        /*
+       
+        // Inicializa medias y varianzas por clase
         for (Elemento clase : datosTrain.getClases()) {
-            ArrayList<ArrayList<Double>> columnas = new ArrayList<>();
-            for (String campo : datosTrain.getNombreCampos()) {
-                columnas.add(mediaVarianza);
+            ArrayList<Double> columnas = new ArrayList<>();
+            for (int i = 0; i < datosTrain.getTamColumn(); i++) {
+                columnas.add(0.0);
             }
-            this.tablaNormal.put(clase, null);
+            this.medias.put(clase, columnas);
+            this.varianzas.put(clase, columnas);
         }
-         */
+        
+        // Calcula media y varianza de las columnas continuas por cada clase
+        
+        // Para cada clase
+        for (Elemento clase: datosTrain.getClases()) {
+            
+            // Para cada columna
+            for (int i = 0; i < datosTrain.getTamColumn(); i++) {
+                
+                ArrayList<Elemento> elementosContinuos = new ArrayList<>();
+                
+                // Recorrer las filas
+                for (Elemento fila[] : datosTrain.getDatos()) {
+                    
+                    // Si la fila es de la clase y la columa continua
+                    if (fila[fila.length - 1].equals(clase) && 
+                            fila[i].getTipo().equals(TiposDeAtributos.Continuo)) {
+                        
+                        elementosContinuos.add(fila[i]);
+                    }
+                }
+                
+                // Calcular media de elementosContinuos
+                double media = this.calcularMedia(elementosContinuos); // TO DO
+                
+                // Calcular varianza de elementosContinuos
+                double varianza = this.calcularVarianza(elementosContinuos); // TO DO
+                
+                // Guardas valores
+                this.medias.get(clase).add(media);
+                this.varianzas.get(clase).add(varianza);
+                
+            }
+        }
+        
+        
         // Crea un hashmap de hashmaps para cada columna
         for(Elemento e: datosTrain.getDatos()[0]){
             HashMap<Elemento, HashMap<Elemento, Integer>> incidenciaColumna = new HashMap<>();

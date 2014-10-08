@@ -60,7 +60,7 @@ abstract public class Clasificador {
           for (Double mark : marks) {
               sum += mark;
           }
-          return sum.doubleValue() / marks.size();
+          return sum / marks.size();
         }
         return sum;
       }
