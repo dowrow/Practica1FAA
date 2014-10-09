@@ -1,8 +1,12 @@
+/**
+ *
+ * @author Daniel Garnacho y Diego Castaño
+ */
+
 package clasificadores;
 
 import datos.Datos;
 import datos.Elemento;
-import datos.ElementoFactory;
 import datos.TiposDeAtributos;
 import java.util.ArrayList;
 import java.util.HashMap;

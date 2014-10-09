@@ -1,19 +1,16 @@
+/**
+ *
+ * @author Daniel Garnacho y Diego Castaño
+ */
+
 package clasificadores;
 
 import datos.Datos;
 import datos.Elemento;
-import datos.ElementoContinuo;
-import datos.ElementoFactory;
 import datos.TiposDeAtributos;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
-
-/**
- *
- * @author dani, diego
- */
 public class ClasificadorNaiveBayes extends Clasificador{
     // El primer Array nos dice la columna
     // El primer HashMap nos dice el valor de la columna

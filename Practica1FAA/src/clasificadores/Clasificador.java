@@ -1,9 +1,13 @@
+/**
+ *
+ * @author Daniel Garnacho y Diego Castaño
+ */
+
 package clasificadores;
 
 import datos.Datos;
 import datos.Elemento;
 import java.util.ArrayList;
-import particionado.DivisionPorcentual;
 import particionado.EstrategiaParticionado;
 import particionado.Particion;
 import particionado.ValidacionCruzada;
@@ -67,14 +71,13 @@ abstract public class Clasificador {
 
     public static void main(String[] args) {
         Datos datos;
-        if(args.length < 1){
-            /*debug*/
-            System.out.println("Se debe pasar el fichero de los datos como parametro del programa.");
-            return;
-            
-        }
-        datos = Datos.cargaDeFichero(args[0]);
         
+        if(args.length < 1){
+            System.out.println("Se debe pasar el fichero de los datos como parametro del programa.");
+            return; 
+        }
+        
+        datos = Datos.cargaDeFichero(args[0]);
         
         //EstrategiaParticionado estrategia = new DivisionPorcentual();
         EstrategiaParticionado estrategia = new ValidacionCruzada();
@@ -83,15 +86,15 @@ abstract public class Clasificador {
         Clasificador clasificador3 = new ClasificadorAPriori();
         
         ArrayList<Double> errores = Clasificador.validacion(estrategia, datos, clasificador);
-        System.out.println("Los errores son: " + errores);
-        System.out.println("Error medio: " + calculateAverage(errores));
+        System.out.println("Los errores con NB son: " + errores);
+        System.out.println("Error medio con NB: " + calculateAverage(errores));
         
         ArrayList<Double> errores2= Clasificador.validacion(estrategia, datos, clasificador2);
-        System.out.println("Los errores2 son: " + errores2);
-        System.out.println("Error medio: " + calculateAverage(errores2));
+        System.out.println("Los errores con NB + Laplace son: " + errores2);
+        System.out.println("Error medio con NB + Laplace: " + calculateAverage(errores2));
         
         ArrayList<Double> errores3= Clasificador.validacion(estrategia, datos, clasificador3);
-        System.out.println("Los errores3 son: " + errores3);
-        System.out.println("Error medio: " + calculateAverage(errores3));
+        System.out.println("Los errores con clasif. a priori son: " + errores3);
+        System.out.println("Error medio con clasif. a priori: " + calculateAverage(errores3));
     }
 }

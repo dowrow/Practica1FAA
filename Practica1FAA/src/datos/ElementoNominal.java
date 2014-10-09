@@ -1,13 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package datos;
-
 /**
  *
- * @author Diego
+ * @author Daniel Garnacho y Diego Castaño
  */
+
+package datos;
+
 public class ElementoNominal extends Elemento {
     private String valor;
     public ElementoNominal (String valor) {

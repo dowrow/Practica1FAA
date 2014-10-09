@@ -1,3 +1,7 @@
+/**
+ *
+ * @author Daniel Garnacho y Diego Castaño
+ */
 
 package datos;
 
