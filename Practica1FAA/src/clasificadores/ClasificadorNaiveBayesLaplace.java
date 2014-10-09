@@ -150,15 +150,6 @@ public class ClasificadorNaiveBayesLaplace extends Clasificador{
                         contador++;
                         incidenciaClase.put(clase, contador);
                         incidenciaColumna.put(fila[i], incidenciaClase);
-
-                        //para hacer laplace, cada vez que generas la tabla de unos
-                        //sumas uno a las incidencias de clases totales
-                        for(Elemento claseAux : datosTrain.getClases()){
-                            Integer nIncidencias = this.incidenciaClaseTotal.get(claseAux);
-                            nIncidencias++;
-                            this.incidenciaClaseTotal.put(claseAux, nIncidencias);
-                            this.filasTrain++;
-                        }
                     }
                 }
                 
