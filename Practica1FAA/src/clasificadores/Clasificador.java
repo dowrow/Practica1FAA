@@ -69,7 +69,7 @@ abstract public class Clasificador {
         Datos datos;
         if(args.length < 1){
             /*debug*/
-            datos = Datos.cargaDeFichero("./src/lenses.data");
+            datos = Datos.cargaDeFichero("./src/car.data");
         }else{
             datos = Datos.cargaDeFichero(args[0]);
         }
