@@ -181,7 +181,7 @@ public class ClasificadorNaiveBayesLaplace extends Clasificador{
                 
                 //simulacion de la clase, decimos, si fuera esta clase, que prob da
                
-                double prob = -1;
+                double prob = 0;
                 for(int i = 0; i < (fila.length - 1); i++){
                     /*
                         prob de el dato dada la hipotesis

@@ -94,6 +94,7 @@ public class Datos {
             for (String cadena: tiposString) {
                 tipos.add(TiposDeAtributos.valueOf(cadena));
             }
+            
 
             // Crea objeto a devolver
             Datos objetoDatos = new Datos(numFilas, tipos);

@@ -69,7 +69,7 @@ abstract public class Clasificador {
         Datos datos;
         if(args.length < 1){
             /*debug*/
-            datos = Datos.cargaDeFichero("./src/spambase.data");
+            datos = Datos.cargaDeFichero("./src/iris.data");
         }else{
             datos = Datos.cargaDeFichero(args[0]);
         }
