@@ -133,31 +133,35 @@ public class ClasificadorNaiveBayesLaplace extends Clasificador{
             for(int i = 0; i < (fila.length - 1); i++){
                 HashMap<Elemento, HashMap<Elemento, Integer>> incidenciaColumna  = this.incidencias.get(i);
                 // Si el valor de la columna ya está en el hashmap
-                if(incidenciaColumna.containsKey(fila[i])){
-                    //se ha encontrado el elemento
-                    HashMap<Elemento, Integer> incidenciaClase = incidenciaColumna.get(fila[i]);
-                    if(incidenciaClase.containsKey(clase)){
+                if(fila[i].getTipo() == TiposDeAtributos.Nominal){
+                    if(incidenciaColumna.containsKey(fila[i])){
+                        //se ha encontrado el elemento
+                        HashMap<Elemento, Integer> incidenciaClase = incidenciaColumna.get(fila[i]);
+                        if(incidenciaClase.containsKey(clase)){
+                            Integer contador = incidenciaClase.get(clase);
+                            contador++;
+                            incidenciaClase.put(clase, contador);
+                        }
+
+                    }else{
+                        //no se encontraba el elemento en la base de datos
+                        HashMap<Elemento, Integer> incidenciaClase = this.generarTablaUnos(datosTrain);
                         Integer contador = incidenciaClase.get(clase);
                         contador++;
                         incidenciaClase.put(clase, contador);
-                    }
-                    
-                }else{
-                    //no se encontraba el elemento en la base de datos
-                    HashMap<Elemento, Integer> incidenciaClase = this.generarTablaUnos(datosTrain);
-                    Integer contador = incidenciaClase.get(clase);
-                    contador++;
-                    incidenciaClase.put(clase, contador);
-                    incidenciaColumna.put(fila[i], incidenciaClase);
-                    
-                    //para hacer laplace, cada vez que generas la tabla de unos
-                    //sumas uno a las incidencias de clases totales
-                    for(Elemento claseAux : datosTrain.getClases()){
-                        Integer nIncidencias = this.incidenciaClaseTotal.get(claseAux);
-                        nIncidencias++;
-                        this.incidenciaClaseTotal.put(claseAux, nIncidencias);
+                        incidenciaColumna.put(fila[i], incidenciaClase);
+
+                        //para hacer laplace, cada vez que generas la tabla de unos
+                        //sumas uno a las incidencias de clases totales
+                        for(Elemento claseAux : datosTrain.getClases()){
+                            Integer nIncidencias = this.incidenciaClaseTotal.get(claseAux);
+                            nIncidencias++;
+                            this.incidenciaClaseTotal.put(claseAux, nIncidencias);
+                            this.filasTrain++;
+                        }
                     }
                 }
+                
             }
             //sumar las incidencias de cada clase
             Integer nIncidencias = this.incidenciaClaseTotal.get(clase);
