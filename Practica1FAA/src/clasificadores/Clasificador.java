@@ -69,10 +69,12 @@ abstract public class Clasificador {
         Datos datos;
         if(args.length < 1){
             /*debug*/
-            datos = Datos.cargaDeFichero("./src/car.data");
-        }else{
-            datos = Datos.cargaDeFichero(args[0]);
+            System.out.println("Se debe pasar el fichero de los datos como parametro del programa.");
+            return;
+            
         }
+        datos = Datos.cargaDeFichero(args[0]);
+        
         
         //EstrategiaParticionado estrategia = new DivisionPorcentual();
         EstrategiaParticionado estrategia = new ValidacionCruzada();
