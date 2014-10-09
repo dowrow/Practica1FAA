@@ -78,12 +78,12 @@ abstract public class Clasificador {
         }
         
         datos = Datos.cargaDeFichero(args[0]);
-        if (datos == null) {
-            return;
-        }
+        
+        //EstrategiaParticionado estrategia = new DivisionPorcentual();
         EstrategiaParticionado estrategia = new ValidacionCruzada();
         Clasificador clasificador = new ClasificadorNaiveBayes();
         Clasificador clasificador2 = new ClasificadorNaiveBayesLaplace();
+        Clasificador clasificador3 = new ClasificadorAPriori();
         
         ArrayList<Double> errores = Clasificador.validacion(estrategia, datos, clasificador);
         System.out.println("Los errores con NB son: " + errores);
@@ -92,5 +92,9 @@ abstract public class Clasificador {
         ArrayList<Double> errores2= Clasificador.validacion(estrategia, datos, clasificador2);
         System.out.println("Los errores con NB + Laplace son: " + errores2);
         System.out.println("Error medio con NB + Laplace: " + calculateAverage(errores2));
+        
+        ArrayList<Double> errores3= Clasificador.validacion(estrategia, datos, clasificador3);
+        System.out.println("Los errores con clasif. a priori son: " + errores3);
+        System.out.println("Error medio con clasif. a priori: " + calculateAverage(errores3));
     }
 }
