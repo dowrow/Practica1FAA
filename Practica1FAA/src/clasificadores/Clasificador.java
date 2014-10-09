@@ -40,7 +40,7 @@ abstract public class Clasificador {
         ArrayList<Double> errores = new ArrayList<>();
         
         //Creamos las particiones siguiendo la estrategia llamando a datos.creaParticiones
-        ArrayList<Particion> particiones = part.crearParticiones(datos.getDatos().length, 10);
+        ArrayList<Particion> particiones = part.crearParticiones(datos.getDatos().length, 5);
 
         //Para validación cruzada: En un bucle hasta nv entrenamos el clasf con la particion de train i(extraerDatosTrain)
                 // y obtenemos el error en la particion test de i (extraerDatosTest)
@@ -69,7 +69,7 @@ abstract public class Clasificador {
         Datos datos;
         if(args.length < 1){
             /*debug*/
-            datos = Datos.cargaDeFichero("./src/car.data");
+            datos = Datos.cargaDeFichero("./src/spambase.data");
         }else{
             datos = Datos.cargaDeFichero(args[0]);
         }
